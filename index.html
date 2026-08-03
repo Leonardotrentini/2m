@@ -55,7 +55,18 @@ body{overflow:hidden}
   var cta=document.getElementById('cta-whatsapp');
   var opened=false,sx=0,sy=0;
 
-  /* Meta Pixel stub — sem download no caminho crítico do FCP */
+  /* PageView leve (sem fbevents.js no caminho crítico / Lighthouse) */
+  function beacon(ev, eid){
+    var u='https://www.facebook.com/tr?id='+PIXEL+'&ev='+ev+'&noscript=1';
+    if(eid)u+='&eid='+encodeURIComponent(eid);
+    try{
+      if(navigator.sendBeacon)navigator.sendBeacon(u);
+      else{var i=new Image(1,1);i.src=u+'&_='+Date.now()}
+    }catch(e){}
+  }
+  beacon('PageView');
+
+  /* Stub fbq + carrega fbevents só após interação (ou 8s) */
   !function(f){if(f.fbq)return;var n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[]}(window);
   fbq('init',PIXEL);
   fbq('track','PageView');
@@ -71,12 +82,14 @@ body{overflow:hidden}
     var l=document.createElement('link');l.rel='stylesheet';l.href='/fonts/local.css';
     document.head.appendChild(l);
   }
-  function afterPaint(fn){
-    if('requestIdleCallback' in window)requestIdleCallback(fn,{timeout:2000});
-    else setTimeout(fn,1);
+  function onEngage(){
+    loadFonts();
+    loadPixel();
   }
-  if(document.readyState==='complete'){afterPaint(loadFonts);afterPaint(loadPixel)}
-  else window.addEventListener('load',function(){afterPaint(loadFonts);afterPaint(loadPixel)},{once:true});
+  ['pointerdown','touchstart','keydown','scroll'].forEach(function(ev){
+    window.addEventListener(ev,onEngage,{once:true,passive:true});
+  });
+  setTimeout(onEngage,8000);
 
   function warm(){
     var l=document.createElement('link');l.rel='dns-prefetch';l.href='https://api.whatsapp.com';
@@ -86,17 +99,15 @@ body{overflow:hidden}
   cta.addEventListener('touchstart',warm,{once:true,passive:true});
 
   function trackContact(){
-    try{fbq('track','Contact',{},{eventID:'wa_'+Date.now()})}catch(e){}
-    try{
-      var url='https://www.facebook.com/tr?id='+PIXEL+'&ev=Contact&noscript=1';
-      if(navigator.sendBeacon)navigator.sendBeacon(url);
-      else{var i=new Image();i.src=url+'&_='+Date.now()}
-    }catch(e){}
+    var eid='wa_'+Date.now();
+    try{fbq('track','Contact',{},{eventID:eid})}catch(e){}
+    beacon('Contact',eid);
   }
 
   function go(e){
     if(opened)return;opened=true;
     if(e)e.preventDefault();
+    loadPixel();
     trackContact();
     window.location.href=WA;
   }
