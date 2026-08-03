@@ -1,15 +1,19 @@
 .DS_Store
 Thumbs.db
 .vercel
+.tmp
 *.log
 .env
 .env.*
 fetch_fonts.py
+run_lh.py
+lh-report.json
+psi.json
+trace.json
+trace.json.gz
 fonts/fonts.css
 logo.png
 
 # snapshot antigo do browser (não usar no deploy)
 2M Confecções — Gola Polo de Alta Qualidade no Atacado.html
 2M Confecções — Gola Polo de Alta Qualidade no Atacado_files/
-
-.vercel
