@@ -1,0 +1,17 @@
+.tmp
+.vercel
+.git
+*.log
+lh-report.json
+psi.json
+run_lh.py
+fetch_fonts.py
+trace.json
+trace.json.gz
+fonts/fonts.css
+logo.png
+logo-110.webp
+logo-220.webp
+2M Confecções — Gola Polo de Alta Qualidade no Atacado.html
+2M Confecções — Gola Polo de Alta Qualidade no Atacado_files
+README.md
