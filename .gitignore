@@ -4,7 +4,12 @@ Thumbs.db
 *.log
 .env
 .env.*
+fetch_fonts.py
+fonts/fonts.css
+logo.png
 
 # snapshot antigo do browser (não usar no deploy)
 2M Confecções — Gola Polo de Alta Qualidade no Atacado.html
 2M Confecções — Gola Polo de Alta Qualidade no Atacado_files/
+
+.vercel
